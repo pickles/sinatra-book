@@ -1,12 +1,12 @@
-Models
+モデル
 ======
 
 Datamapper
 ----------
 
-Start out by getting the DataMapper gem if you don't already have it, and then
-making sure it's in your applicaton. A call to `setup` as usual will get the
-show started, and this example will include a 'Post' model.
+もしまだ取得していない場合はDataMapperのgemを取得するところから始めてください。
+そして、アプリケーションの中にあることを確認してください。
+いつも通り`setup`を呼ぶと、ショーの始まりです。次の例は'Post'モデルの例です。
 
     require 'rubygems'
     require 'sinatra'
@@ -22,19 +22,18 @@ show started, and this example will include a 'Post' model.
         property :created_at, DateTime
     end
     
-    # automatically create the post table
+    # postテーブルを自動的につくる
     Post.auto_migrate! unless Post.table_exists?
 
-Once that is all well and good, you can actually start developing your
-application!
+以上で準備完了です、これで実際にあなたのアプリケーションを開発することができます！
 
     get '/' do
-        # get the latest 20 posts
+        # 最新の20ポストを取得する
         @posts = Post.get(:order => [ :id.desc ], :limit => 20)
         erb :index
     end
 
-Finally, the view at `./view/index.html`:
+最後に `./view/index.html`のビューです：
 
     <% for post in @posts %>
         <h3><%= post.title %></h3>
@@ -44,17 +43,17 @@ Finally, the view at `./view/index.html`:
 
 Sequel
 ------
-Require the Sequel gem in your app:
+Sequel gem が必要です:
 
     require 'rubygems'
     require 'sinatra'
     require 'sequel'
 
-Use a simple in-memory DB:
+簡単なインメモリ DBを使います：
 
     DB = Sequel.sqlite
 
-Create a table:
+テーブルを作ります：
 
     DB.create_table :links do
      primary_key :id
@@ -62,12 +61,12 @@ Create a table:
      varchar :link
     end
 
-Create the Model class:
+モデルクラスを作ります：
 
     class Link < Sequel::Model
     end
 
-Create the route:
+ルートを作ります：
    
     get '/' do
      @links = Link.all
@@ -76,8 +75,8 @@ Create the route:
 
 ActiveRecord
 ------------
-First require ActiveRecord gem in your application, then give your database
-connection settings:
+最初にアプリケーションでActiveRecord gem をrequireします。
+そしてデータベースの接続設定をします：
 
     require 'rubygems'
     require 'sinatra'
@@ -88,8 +87,8 @@ connection settings:
       :database =>  'sinatra_application.sqlite3.db'
     )
 
-Now you can create and use ActiveRecord models just like in Rails (the example
-assumes you already have a 'posts' table in your database):
+これでRails内のようにActiveRecoredのモデルを作成し使う事ができます。
+（この例ではすでに'posts'テーブルがデータベースにあるものとしています）：
 
     class Post < ActiveRecord::Base
     end
@@ -99,7 +98,7 @@ assumes you already have a 'posts' table in your database):
       erb :index 
     end
     
-This will render ./views/index.erb:
+これは ./views/index.erbをレンダリングします：
 
     <% for post in @posts %>
       <h1><%= post.title %></h1>

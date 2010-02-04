@@ -1,17 +1,18 @@
-Filters
+フィルタ
 =======
 
 before do...
 ------------
-These are run in Sinatra::EventContext
+これらはSinatra::EventContextで実行されます。
 
     before do
       # .. this code will run before each event ..
     end
 
-Handling of Rails like nested params (Sinatra <= 0.3.0) {#nested_params_as_filter}
+Railsのようなネストしたパラメータを扱う (Sinatra <= 0.3.0) {#nested_params_as_filter}
 ------------------------------------
-If you want to use a form with parameters like this (aka. Rails' nested params):
+次のような（Railsのネストしたパラメータとして知られる）パラメータを
+もつフォームを使いたい場合：
 
     <form>
       <input ... name="post[title]" />
@@ -19,7 +20,8 @@ If you want to use a form with parameters like this (aka. Rails' nested params):
       <input ... name="post[author]" />
     </form>
 
-You have to convert parameters to a hash. You can easily do this with a before filter:
+パラメータをハッシュに変換する必要があります。
+これはbeforeフィルタで簡単に行うことができます。
 
     before do
       new_params = {}

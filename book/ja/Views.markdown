@@ -1,11 +1,12 @@
-Views
+ビュー
 =====
+すべてのファイルベースのビューは次の場所にあります：
 All file-based views are looked up in:
 
     root
       | - views/
 
-Template Languages
+テンプレート
 ------------------
 
 ### Haml
@@ -13,28 +14,28 @@ Template Languages
       haml :index
     end
 
-This will render ./views/index.haml
+これは./views/index.hamlをレンダリングします。
 
 ### Sass
     get '/' do
       sass :styles
     end
 
-This will render ./views/styles.sass
+これは./views/styles.sassをレンダリングします。
 
 ### Erb
     get '/' do
       erb :index
     end
 
-This will render ./views/index.erb
+これは./views/index.erbをレンダリングします。
 
 ### Builder
     get '/' do
       builder :index
     end
 
-This will render ./views/index.builder
+これは./views/index.builderをレンダリングします。
 
     get '/' do
       builder do |xml|
@@ -44,12 +45,12 @@ This will render ./views/index.builder
       end
     end
 
-This will render the xml inline, directly from the handler.
+これはハンドラ内で直接インラインXMLをレンダリングします。
 
 #### Atom Feed
 
 #### RSS Feed
-Assume that your site url is http://liftoff.msfc.nasa.gov/.
+あなたのサイトのURLがhttp://liftoff.msfc.nasa.gov/とした場合。
 
     get '/rss.xml' do
       builder do |xml|
@@ -74,19 +75,19 @@ Assume that your site url is http://liftoff.msfc.nasa.gov/.
       end
     end
 
-This will render the rss inline, directly from the handler.
+これはハンドラ内で直接インラインでRSSをレンダリングします。
 
-Layouts
+レイアウト
 -------
 
-Layouts are simple in Sinatra.  Put a file in your views directory named
-"layout.erb", "layout.haml", or "layout.builder".  When you render a page, the
-appropriate layout will be grabbed (of the same filetype), and used.
+Sinatraのレイアウトは簡単です。
+"layout.erb"、"layout.haml"または "layout.builder"という名前で
+viewsディレクトリに配置してください。ページをレンダリングするとき、
+適切な（同じファイルタイプの）レイアウトが選ばれ、使用されます。
 
-The layout itself should call `yield` at the point you want the content to be
-included.
+コンテンツを含めたい場所で、レイアウト自身で `yield` を呼び出すべきです。
     
-An example haml layout file could look something like this:
+Hamlによるレイアウトファイルの例は次のようになります：
 
     %html
       %head
@@ -95,19 +96,19 @@ An example haml layout file could look something like this:
         #container
           = yield
 
-Avoiding a layout
+レイアウトを無効化する
 -----------------
-Sometimes you don't want the layout rendered.  In your render method just
-pass :layout => false, and you're good.
+ときどきレイアウトをレンダリングしたくない場合があります。その場合、
+レンダリングするメソッドに、単純に:layout => falseを渡すだけで良いです。
 
     get '/' do
       haml :index, :layout => false
     end
 
-In File Views
+ファイル内ビュー
 -------------
 
-This one is cool:
+これはステキです：
 
     get '/' do
       haml :index
@@ -125,8 +126,8 @@ This one is cool:
     @@ index
     %div.title Hello world!!!!!
 
-Try it!
+試してみてください！
 
-Partials
+パーシャル
 --------
 

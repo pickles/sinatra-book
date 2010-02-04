@@ -1,26 +1,29 @@
-Handlers
+ハンドラ
 ========
 
-Structure
+構造
 ---------
 
-Handler is the generic term that Sinatra uses for the "controllers". A
-handler is the initial point of entry for new HTTP requests into your
-application.
+ハンドラはSinatraが「コントローラ」として使う一般的な用語です。
+ハンドラはあなたのアプリケーションへ送信される
+新しいHTTPリクエストの最初のエントリーポイントです。
 
-To find more about the routes, head to the [Routes section](#routes)
+routeの詳細については、[Routeの章](#routes)を参照してください。
 
-Form parameters
+フォームパラメータ
 ---------------
-In handlers you can access submitted form parameters directly via the params hash:
+ハンドラでは送信されたフォームのパラメータにparamsハッシュから
+直接アクセスすることができます。
 
     get '/' do
       params['post']
     end
     
-### Nested form parameters
+### ネストしたフォームパラメータ
 
-The support for Rails-like nested parameters has been built-in since Sinatra version 0.9.0. Before this version you had to [implement this functionality as a before filter](#nested_params_as_filter)!
+Sinatraバージョン0.9.0からRailsのようなネストしたパラメータのサポートが組み込まれました。
+これより前のバージョンでは、[before フィルタとしてこの機能を実装する](#nested_params_as_filter)
+必要があります！
 
     <form>
       <input ... name="post[title]" />
@@ -29,20 +32,20 @@ The support for Rails-like nested parameters has been built-in since Sinatra ver
     </form>
     
 
-The parameters in this case became as a hash:
+この例のパラメータはハッシュになります：
     
     {"post"=>{ "title"=>"", "body"=>"", "author"=>"" }}
 
-Therefore in handlers you can use nested parameters like a regular hash:
+よって、普通のハッシュのようにネストしたパラメータをハンドラで使うことができます：
 
     params['post']['title']
 
-Redirect
+リダイレクト
 --------
 
-The redirect helper is a shortcut to a common http response code (302).
+redirectヘルパーは一般的なHTTPレスポンスコード(302)のショートカットです。
 
-Basic usage is easy:
+基本的な使い方は簡単です：
 
     redirect '/'
 
@@ -50,28 +53,28 @@ Basic usage is easy:
 
     redirect 'http://www.google.com'
 
-The redirect actually sends back a Location header to the browser, and the
-browser makes a followup request to the location indicated. Since the browser
-makes that followup request, you can redirect to any page, in your application,
-or another site entirely.
+リダイレクトはLocationヘッダをブラウザに返し、ブラウザはリクエストに従い、
+指示された場所に遷移します。ブラウザがリクエストに従う事により
+あなたのアプリケーション内でも、完全に別なサイトでも好きなページへ
+リダイレクトすることができます。
 
-The flow of requests during a redirect is:
-Browser → Server (redirect to '/') → Browser (request '/') → Server (result for '/')
+リダイレクトのフローは次通りです：
+ブラウザ → サーバ ('/'へリダイレクト) → ブラウザ ('/'をリクエスト) → サーバ ('/'を返す)
 
-To force Sinatra to send a different response code, it's very simple:
+Sinatraに異なるレスポンスコードを送るようにするのはとても単純です：
 
     redirect '/', 303 # forces the 303 return code
 
     redirect '/', 307 # forces the 307 return code
 
-Sessions
+セッション
 --------
 
-### Default Cookie Based Sessions
+### デフォルトのCookieベースのセッション
 
-Sinatra ships with basic support for cookie-based sessions. To enable it in a
-configure block, or at the top of your application, you just need to enable
-the option.
+SintraはCookieベースのセッションを基本的にサポートしています。
+この機能を有効にするには、configureブロックまたはアプリケーションの先頭で
+このオプションをenableするだけです。
 
     enable :sessions
 
@@ -82,79 +85,83 @@ the option.
       "You've hit this page #{session["counter"]} time(s)"
     end
 
-The downside to this session approach is that all the data is stored in the
-cookie. Since cookies have a fairly hard limit of 4 kilobytes, you can't store
-much data. The other issue is that cookies are not tamper proof - the user
-can change any data in their session. But... it is easy, and it doesn't have
-the scaling problems that memory or database backed sessions run into.
+このセッションのアプローチの不都合な点は、すべてのデータがCookieに保存されることです。
+Cookieには4キロバイトまでという厳しい制約を持っているため、
+多くのデータを保存することができません。
+他の問題としてはCookieは不正を防止することができません。
+ユーザはセッション内のどんなデータでも変更することができます。
+しかし、、、Cookieは簡単で、メモリやデータベースを利用したセッションで
+起こるスケーリングの問題がありません。
 
-### Memory Based Sessions
+### メモリベースのセッション
 
-### Memcached Based Sessions
+### Memcachedベースのセッション
 
-### File Based Sessions
+### ファイルベースのセッション
 
-### Database Based Sessions
+### データベースベースのセッション
 
 
-Cookies
+Cookie
 -------
 
-Cookies are a fairly simple thing to use in Sinatra, but they have a few quirks.
+CookieをSinatraで利用するのはとても簡単ですが、いくらかクセがあります。
 
-Lets first look at the simple use case:
+最初に簡単な例を見てみましょう：
 
     require 'rubygems'
     require 'sinatra'
 
     get '/' do
-        # Get the string representation
+        # 文字列表現を得る
         cookie = request.cookies["thing"]
 
-        # Set a default
+        # デフォルトを設定する
         cookie ||= 0
 
-        # Convert to an integer
+        # 整数に変換する
         cookie = cookie.to_i
 
-        # Do something with the value
+        # 値で何かをする
         cookie += 1
 
-        # Reset the cookie
+        # cookieをリセットする
         set_cookie("thing", cookie)
 
-        # Render something
+        # 何かを表示する
         "Thing is now: #{cookie}"
     end
 
-Setting a path, expiration date, or domain gets a little more complicated - see the source code for set\_cookie if you want to dig deeper.
+パス、失効日、ドメインを設定するのは少し複雑です。
+詳細はset\_cookieのソースコードを参照してください。
 
     set_cookie("thing", :domain => myDomain,
                         :path => myPath,
                         :expires => Date.new)
 
-That's the easy stuff with cookies - It can also serialize Array objects,
-separating them with ampersands (&), but when they come back, it doesn't
-deserialize or split them in any way, it hands you the raw, encoded string
-for your parsing pleasure.
+これはCookieの簡単な例です。SinatraではArrayオブジェクトを、
+アンパサンド（&amp;）で分割してシリアライズすることもできます。
+しかし、それらが戻ってきたとき、自動的にデシリアライズしたり
+分割したりはせず、あなたのパースする喜びのために
+エンコードされた文字列の生データが渡されます。
 
-
-Status
+ステータス
 ------
 
-If you want to set your own status response instead of the normal 200 (Success), you can use the `status`-helper to set the
-code, and then still render normally:
+通常の200（Success）ではなく、独自のステータスコードを返したい場合、
+`status`ヘルパを使用しステータスコードをセットしながら、
+通常通りレンダリングを行うことができます：
 
     get '/' do
       status 404
       "Not found"
     end
 
-Alternatively you can use `throw :halt, [404, "Not found"]` to immediately stop any further actions and return the
-specified status code and string to the client. `throw` supports more options in this regard, see the appropriate section
-for more info.
+他の方法として、`throw :halt, [404, "Not found"]`を使って、この後の処理をただちにやめて
+指定したステータスコードと文字列をクライアントに返すことができます。
+この点で`throw`はたくさんのオプションをサポートしています。
+詳細は適切な章を参照してください。
 
-
-Authentication
+認証
 --------------
 
