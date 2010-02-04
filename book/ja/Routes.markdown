@@ -1,34 +1,34 @@
 Routes
 ======
 
-HTTP methods
+HTTP メソッド
 ------------
-Sinatra's routes are designed to respond to the HTTP request methods.  
+SinatraのroutesはHTTPリクエストのメソッドに応答するように設計されています。
 
 * GET
 * POST
 * PUT
 * DELETE
 
-Basic
+基本
 -----
 
-Simple
+シンプル
 
     get '/hi' do
       ...
     end
     
-With params
+パラメータ付きリクエスト
 
     get '/:name' do
       # matches /sinatra and the like and sets params[:name]
     end
 
-Options
+オプション
 -------
 
-Splats
+Splat
 ------
 
     get '/say/*/to/*' do
@@ -42,7 +42,7 @@ Splats
     end
 
 
-User agent
+ユーザエージェント
 ----------
 
     get '/foo', :agent => /Songbird (\d\.\d)[\d\/]*?/ do
@@ -53,36 +53,37 @@ User agent
       # matches non-songbird browsers
     end
 
-Other methods
+その他のメソッド
 -------------
 
-Other methods are requested exactly the same as "get" routes.  You simply use
-the `post`, `put`, or `delete` functions to define the route, rather then the
-`get` one.  To access POSTed parameters, use `params[:xxx]` where xxx is the name
-of the form element that was posted.
+その他のメソッドは「get」のrouteと全く同じようにリクエストされます。
+`get`の代わりに単純に`post`、`put`または `delete`関数をrouteの定義に使うだけです。
+POSTのパラメータにアクセスするには、`params[:xxx]`を使用します。
+ここでxxxはポストされてきたフォーム要素の名前です。
 
     post '/foo' do
       "You just asked for foo, with post param bar equal to #{params[:bar]}"
     end
 
 
-The PUT and DELETE methods
+PUT と DELETE メソッド
 --------------------------
 
-Since browsers don't natively support the PUT and DELETE methods, a hacky
-workaround has been adopted by the web community. There are two steps to
-using this workaround with Sinatra:
+ブラウザがPUTとDELETEメソッドをネイティブでサポートしていないため、
+Webコミュニティによってハック的な対処法が導入されています。
+Sinatraでこの対処法を使うために２つの方法があります：
 
-First, add a hidden element in your form with the name "\_method" and the
-value equal to the HTTP method you want to use. The form itself is sent as
-a POST, but Sinatra will interpret it as the desired method. For example:
+１つ目は、「\_method」という名前のhidden要素をフォームに追加し、
+その値に使いたいHTTPメソッドの名前を設定します。
+このフォーム自体はPOSTとして送信されますが、Sinatraは望んだ
+メソッドとして解釈します。例えば：
 
     <form method="post" action="/destroy_it">
       <input type="hidden" name="_method" value="delete" />
       <div><button type="submit">Destroy it</button></div>
     </form>
 
-Then, add `use Rack::MethodOverride` to your app, like so:
+そしてアプリケーションに、次のように `use Rack::MethodOverride`を追加します:
 
     require 'sinatra'
     
@@ -92,7 +93,7 @@ Then, add `use Rack::MethodOverride` to your app, like so:
       # destroy it
     end
 
-Or, if you are subclassing Sinatra::Base, do it like this:
+もしくは、次のようにSinatra::Baseのサブクラスにします：
 
     require 'sinatra/base'
     
@@ -104,26 +105,27 @@ Or, if you are subclassing Sinatra::Base, do it like this:
       end
     end
 
-When you want to use PUT or DELETE from a client that does support them
-(like Curl, or ActiveResource), just go ahead and use them as you normally
-would, and ignore the `_method` advice above. That is only for hacking in
-support for browsers.
+（CurlやActiveResource）などPUTやDELETEをサポートするクライアントを使う場合、
+上記の`_method`は無視してそのままそれらを使ってください。
+これはPUTやDELETEをサポートしていないブラウザのためのハックです。
 
-How routes are looked up
+どのようにrouteをみつけるか
 ------------------------
-Each time you add a new route to your application, it gets compiled down into a
-regular expression that will match it.  That is stored in an array along with
-the handler block attached to that route.
+新しいrouteをアプリケーションに追加するたび、それにマッチするような
+正規表現にコンパイルされます。それは、そのrouteに結びついたハンドラブロックと
+共に配列に格納されます。
 
-When a new request comes in, each regex is run in turn, until one matches.  Then
-the the handler (the code block) attached to that route gets executed.
+新しいリクエストが届くと、いずれかにマッチするまでそれぞれの正規表現が実行され、
+そのrouteに結びつくハンドラ（コードブロック）が実行されます。
 
-Splitting into multiple files
+複数のファイルに分割する
 -----------------------------
-Because Sinatra clears out your routes and reloads your application on every 
-request in development mode, you can't use require to load files containing 
-your routes because these will only be loaded when the application starts 
-(and reloaded even on the first request!)  Instead, use [load](http://www.ruby-doc.org/core/classes/Kernel.html#M005966 "Ruby RDoc: load"):
+developmentモードにおいて、Sinatraはリクエストごとにrouteをクリアし、
+アプリケーションを再読み込みを行うため、routeを含むファイルをrequireすることはできません。
+なぜならrequireしたrouteはアプリケーションが起動した時だけロードされるためです。
+（そして最初のリクエストの時でさえ再読み込みが行われます！）
+その代わり、[load](http://www.ruby-doc.org/core/classes/Kernel.html#M005966 "Ruby RDoc: load")
+を使用してください。
 
     # application.rb
     require 'rubygems'
@@ -135,7 +137,7 @@ your routes because these will only be loaded when the application starts
     
     load 'more_routes.rb'
 
-and
+そして
 
     # more_routes.rb
     

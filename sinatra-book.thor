@@ -30,6 +30,23 @@ class Book < Thor
     
   end
 
+  desc "build_with_lang [LANG] [FORMAT]", "Build the book. LANG specifies which language subdirectory to build.  FORMAT specifies what format the output should have. Defaults to html. Valid options are: #{SUPPORTED_FORMATS.join(", ")}"
+  def build_with_lang(lang = nil, format = 'html')
+    doc = Maruku.new(complete_markdown(lang))
+    
+    FileUtils.mkdir_p(OUTPUT_DIR)
+    FileUtils.cp( File.join(File.dirname(__FILE__), 'assets', 'book.css'), File.join(File.dirname(__FILE__), 'output'))
+    
+        
+    if SUPPORTED_FORMATS.include?( format )
+      self.send("build_#{format}", doc)
+    else
+      STDERR << "Error: Don't know how to build for format '#{format}'"
+      exit 1
+    end
+    
+  end
+
   desc "clean", "Delete the output directory, along with all contents"
   def clean
     FileUtils.rm_rf(OUTPUT_DIR, {:verbose => true})
@@ -65,7 +82,7 @@ class Book < Thor
     end
   end
   
-  def complete_markdown
+  def complete_markdown(lang = nil)
     # Collect all the markdown files in the correct order and squash them together into one big string
     s = [] 
     File.new("book-order.txt").each_line do |line|
@@ -73,7 +90,9 @@ class Book < Thor
       next if line =~ /^#/   # Skip comments
       next if line =~ /^$/   # Skip blank lines
 
-      File.open(File.join(BOOK_DIR, line)) do |f|
+      book_dir = lang ? File.join(BOOK_DIR, lang) : BOOK_DIR
+
+      File.open(File.join(book_dir, line)) do |f|
         # I have no idea if the double \n is needed, but seems safe
         s << f.read
       end
