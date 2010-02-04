@@ -1,12 +1,12 @@
-Configuration
+設定
 =============
 
-Use Sinatra's "set" option
+Sinatraの"set"オプションを使う
 --------------------------
 
-Configure blocks are not executed in the event context, and don't have access
-to the same instance variables. To store a piece of information that you want
-to access in your routes, use `set`.
+configureブロックはイベントコンテキストで実行されず、
+同じインスタンス変数にアクセスすることもありません。
+routeでアクセスしたい情報を保存するには`set`を使用してください。
 
     configure :development do
       set :dbname, 'devdb'
@@ -23,7 +23,7 @@ to access in your routes, use `set`.
     end
 
 
-External config file via the configure block
+configureブロックを介した外部の設定ファイル
 --------------------------------------------
 
 

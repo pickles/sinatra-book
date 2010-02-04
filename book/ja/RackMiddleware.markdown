@@ -1,9 +1,13 @@
 Rack Middleware
 ===============
+Sinatraは、RubyのWebフレームワークのための最小限の標準的な
+インターフェイスである[Rack][rack]の上に乗ります。
+アプリケーション開発者のためのRackの一番面白い機能の一つは、
+"ミドルウェア"のサポートです。ミドルウェアはサーバと
+アプリケーションの間に位置するコンポーネントでHTTPリクエスト/レスポンスを
+監視したり生成し様々な共通機能を提供します。
 
-Sinatra rides on [Rack][rack], a minimal standard interface for Ruby web frameworks. One of Rack’s most interesting capabilities for application developers is support for "middleware" -- components that sit between the server and your application monitoring and/or manipulating the HTTP request/response to provide various types of common functionality.
-
-Sinatra makes building Rack middleware pipelines a cinch via a top-level `use` method:
+Sinatraはのトップレベルの{0}use{/0}メソッドを介して、Rackミドルウェアのパイプラインの構築を簡単にします：
 
     require 'sinatra'
     require 'my_custom_middleware'
@@ -15,14 +19,17 @@ Sinatra makes building Rack middleware pipelines a cinch via a top-level `use` m
       'Hello World'
     end
 
-
-The semantics of "use" are identical to those defined for the [Rack::Builder][rack_builder] DSL (most frequently used from rackup files). For example, the use  method accepts multiple/variable args as well as blocks:
+"use"の動作は（よくrackupファイルで使われる）[Rack::Builder][rack_builder]DSLのものと同一です。
+たとえば、useメソッドは複数/変数をブロックの引数として受け取ります：
 
     use Rack::Auth::Basic do |username, password|
       username == 'admin' && password == 'secret'
     end
 
-Rack is distributed with a variety of standard middleware for logging, debugging, URL routing, authentication, and session handling. Sinatra uses many of of these components automatically based on configuration so you typically don’t have to use them explicitly.
+Rackは、ロギング、デバッグ、URLルーティング、認証、セッションハンドリングのための
+様々な標準的ミドルウェアとともに配布されます。
+Sinatraはこれらのたくさんのコンポーネントを設定に基づいて自動的に使います。
+そのため、通常は明示的にこれらをつかう必要はありません。
 
 [rack]: http://rack.rubyforge.org/
 [rack_builder]: http://rack.rubyforge.org/doc/classes/Rack/Builder.html

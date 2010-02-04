@@ -1,18 +1,19 @@
-Contributing
+貢献
 ============
 
-How can I clone the Sinatra repository?
+どうすればSinatraのリポジトリをクローンできますか？
 ---------------------------------------
 
-First of all, you'll need the [Git][git] version control system. [Git][git] is
-available for all major platforms:
+最初に、[Git][git]バージョン管理システムが必要です。
+[Git][git] はすべての主要プラットフォームで利用可能です：
+
 * [Windows][git_win]
 * [Mac OS X][git_osx]
-* Linux and BSD users can usually acquire [Git][git] through their Package
-  Management System, e.g. `apt-get install git-core` on Debian systems.
+* LinuxやBSDユーザは通常、パッケージ管理システム
+  （例えばDebianシステムではapt-get install git-core）を介して[Git][git]を入手できます。
 
-After that, cloning the Sinatra repository is as easy as typing the following
-into your command line:
+その後、次のコードをコマンドラインに入力するだけで
+簡単にSinatraのリポジトリをクローンすることができます：
 
     git clone git://github.com/sinatra/sinatra.git
 
@@ -20,8 +21,8 @@ into your command line:
 [git_win]: http://code.google.com/p/msysgit/
 [git_osx]: http://code.google.com/p/git-osx-installer/
 
-How to create a patch?
+どのようにパッチを作成するのですか？
 ----------------------
 
-How to get that patch into the official Sinatra?
+どのように公式なSinatraにパッチを適用できますか？
 ------------------------------------------------

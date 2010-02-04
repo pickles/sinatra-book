@@ -4,40 +4,43 @@ Deployment
 Heroku
 ------
 
-This is the easiest configuration + deployment option.  [Heroku] has full support for Sinatra applications.   Deploying to Heroku is simply a matter of pushing to a remote git repository.
+これは、もっとも簡単な設定 + デプロイの方法です。
 
-Steps to deploy to Heroku:
+[Heroku]はSinatraアプリケーションを完全にサポートします。
+Herokuへのデプロイは単にリモートのgitリポジトリにプッシュするだけです。
 
-* Create an [account](http://heroku.com/signup) if you don't have one
+Herokuへのデプロイ手順は次のとおりです：
+
+* [アカウント](http://heroku.com/signup)を持っていない場合は作成します
 * `sudo gem install heroku`
-* Make a config.ru in the root-directory
-* Create the app on heroku
-* Push to it
+* ルートディレクトリにconfig.ruファイルを作成します。
+* Herokuの上にアプリを作成します。
+* そこにプッシュします。
 
-1. An example config.ru file (Heroku sets `RACK_ENV` to production for you)
+1. config.ruファイルの例（Herokuは`RACK_ENV`をproductionに設定します。）
 
        require "myapp"
 
        run Sinatra::Application
 
-2. Create the app and push to it
+2. アプリを作成し、プッシュする
 
-       From the root-directory of the application
+       アプリケーションのルートディレクトリから
 
-       $ heroku create <app-name>  # This will add heroku as a remote
+       $ heroku create <app-name>  # リモートとしてherokuを追加します
        $ git push heroku master
 
-For more details see [this](http://github.com/sinatra/heroku-sinatra-app)
+詳細については、 [ここ](http://github.com/sinatra/heroku-sinatra-app)を参照してください
 
 [Heroku]: http://www.heroku.com
 
-Lighttpd Proxied to Thin        {#deployment_lighttpd}
+ThinにプロキシしたLighttpd        {#deployment_lighttpd}
 ------------------------
 
-This will cover how to deploy Sinatra to a load balanced reverse
-proxy setup using Lighttpd and Thin.
+ここではLighttpdとThinを使ったロードバランシングされた
+リバースプロキシのセットにSinatraをデプロイする方法を説明します。
 
-1. Install Lighttpd and Thin
+1. LighttpdとThinのインストール
 
        # Figure out lighttpd yourself, it should be handled by your 
        # linux distro's package manager
@@ -45,8 +48,7 @@ proxy setup using Lighttpd and Thin.
        # For thin:
        gem install thin
 
-2. Create your rackup file -- the `require 'app'` line should require the actual 
-   Sinatra app you have written.
+2. rackupファイルの作成 -- `require 'app'`の行で実際のSinatraアプリをrequireします。
 
        ## This is not needed for Thin > 1.0.0
        ENV['RACK_ENV'] = "production"
@@ -55,7 +57,7 @@ proxy setup using Lighttpd and Thin.
        
        run Sinatra::Application
 
-3. Setup a config.yml - change the /path/to/my/app path to reflect reality.
+3. config.ymlの設定 - /path/to/my/appに実際のパスを反映させます。
 
        ---
          environment: production
@@ -72,8 +74,9 @@ proxy setup using Lighttpd and Thin.
          max_persistent_conns: 512
          daemonize: true
 
-4. Setup lighttpd.conf - change mydomain to reflect reality. Also make 
-   sure the first port here matches up with the port setting in config.yml.
+4. lighttpd.confの設定。mydomainを実際の値に変更します。
+   また、ここに記載した最初のポートがconfig.ymlで設定したポートと
+   一致していることを確認します。
 
        $HTTP["host"] =~ "(www\.)?mydomain\.com"  {
                proxy.balance = "fair"
@@ -85,16 +88,16 @@ proxy setup using Lighttpd and Thin.
                                )
        }
 
-5. Start thin and your application. I have a rake script so I can just 
-   call "rake start" rather than typing this in. 
+5. Thinとアプリケーションを起動します。
+   以下のコマンドを実行する代わりに、"rake start"を呼ぶだけで起動することができます。
 
        thin -s 2 -C config.yml -R config.ru start
 
-You're done! Go to mydomain.com/ and see the result! Everything should be setup
-now, check it out at the domain you setup in your lighttpd.conf file.
+これで完了です!mydomain.com/にアクセスして結果をみてください！
+これですべての設定ができているはずです。
+lighttpd.confファイルで設定したあなたのドメインを確認してください。
 
-*Variation* - nginx via proxy - The same approach to proxying can be applied to
-the nginx web server
+*バリエーション* - プロキシ経由でのnginx - nginxウェブサーバに同じ方法でプロキシすることができます。
 
     upstream www_mydomain_com {
       server 127.0.0.1:5000;
@@ -112,37 +115,37 @@ the nginx web server
       
     }
 
-*Variation* - More Thin instances - To add more thin instances, change the 
-`-s 2` parameter on the thin start command to be how ever many servers you want. 
-Then be sure lighttpd proxies to all of them by adding more lines to the proxy 
-statements. Then restart lighttpd and everything should come up as expected.
-
+*バリエーション* - Thinのインスタンスを増やす - thinの起動コマンドに`-s 2`
+パラメータを渡すことで好きな数分thinのインスタンスを増やすことができます
+その後、その分のproxy文がlighttpdプロキシに追加されていることを確認してください。
+次に、lighttpdを再起動し、期待どおりになっていることを確認します。
 
 Passenger (mod rails)           {#deployment_passenger}
 ------------------------
-Hate deployment via FastCGI? You're not alone.  But guess what, Passenger supports Rack;
-and this book tells you how to get it all going.
+FastCGIでのデプロイは嫌いですか？あなただけではありません。
+ちょっと聞いてください、PassengerがRackをサポートしています。
+そしてこの本はあなたにどうしたらよいかを教えましょう。
 
-You can find additional documentation at the Passenger Github repository.
+より多くのドキュメントをPassengerのGithubリポジトリで見つけることができます。
 
-
-1. Setting up the account in the Dreamhost interface
+1. Dreamhostのインターフェイスでのアカウントの設定
 
        Domains -> Manage Domains -> Edit (web hosting column)
-       Enable 'Ruby on Rails Passenger (mod_rails)'
-       Add the public directory to the web directory box. So if you were using 'rails.com', it would change to 'rails.com/public'
-       Save your changes
+       'Ruby on Rails Passenger (mod_rails)'を有効にする。
+       webディレクトリにpublicディレクトリを追加する。
+       もし'rails.com'を使っていた場合、'rails.com/public'に変更されています。
+       変更を保存します。
 
-2. Creating the directory structure
+2. ディレクトリ構造を作成
 
        domain.com/
        domain.com/tmp
        domain.com/public
-       # a vendored version of sinatra - not necessary if you use the gem
+       # gemを使っている場合Sinatraのvendor化されたバージョンは必要ありません。
        domain.com/sinatra
 
-3. Creating the "Rackup file" (rack configuration file) `config.ru` -- the `require 'app'`
-   line should require the actual Sinatra app you have written.
+3. （Rackの設定ファイル）"Rackupファイル"である`config.ru`を作成します。
+     - `require 'app'`の行はあなたが作成した実際のアプリケーションをrequireしてください。
 
        ## Passenger should set RACK_ENV for Sinatra
 
@@ -150,7 +153,7 @@ You can find additional documentation at the Passenger Github repository.
        
        run Sinatra::Application
 
-4. A very simple Sinatra application
+4. 非常に単純なSinatraのアプリケーション
 
        # this is test.rb referred to above
        get '/' do
@@ -161,43 +164,51 @@ You can find additional documentation at the Passenger Github repository.
          "You asked for foo/#{params[:bar]}"
        end
 
-And that's all there is to it! Once it's all setup, point your browser at your 
-domain, and you should see a 'Worked on Dreamhost' page. To restart the 
-application after making changes, you need to run `touch tmp/restart.txt`.
+そしてこれが必要なことのすべてです！
+設定が終わったら、あなたのドメインにアクセスすると、
+'Worked on Dreamhost'ページが見えるはずです。
+変更が終わったあとアプリケーションを再起動するには、
+`touch tmp/restart.txt`を実行する必要があります。
 
-Please note that currently passenger 2.0.3 has a bug where it can cause Sinatra to not find
-the view directory. In that case, add `:views => '/path/to/views/'` to the Sinatra options
-in your Rackup file.
+現在のPassenger 2.0.3には、Sinatraがviewディレクトリを見つけることが
+できなくなるバグが有ることに注意してください。
+その場合には、`:views => '/path/to/views/'`
+をRackupファイルのSinatraオプションに追加してください。
 
-You may encounter the dreaded "Ruby (Rack) application could not be started" 
-error with this message "can't activate rack (>= 0.9.1, < 1.0, runtime), 
-already activated rack-0.4.0". This happens because DreamHost has version 0.4.0
-installed, when recent versions of Sinatra require more recent versions of Rack.
-The solution is to explicitly require the rack and sinatra gems in your 
-config.ru. Add the following two lines to the start of your config.ru file:
-  
+もしかすると、"can't activeate rack (>= 0.9.1, < 1.0, runtime), 
+already activated rack-0.4.0"というメッセージと共に
+"Ruby (Rack) application could not be started"という
+恐ろしいエラーに遭遇するかもしれません。
+これはDreamHostがバージョン 0.4.0をインストールしており、
+最近のSinatraのバージョンはもっと新しいバージョンのRackを必要とするために発生します。
+これを解決するには、config.ruで明示的にrackとsinatraのgemをrequireする必要があります。
+config.ruファイルの先頭に、次の2行を追加します：
+
        require '/home/USERNAME/.gem/ruby/1.8/gems/rack-VERSION-OF-RACK-GEM-YOU-HAVE-INSTALLELD/lib/rack.rb'
        require '/home/USERNAME/.gem/ruby/1.8/gems/sinatra-VERSION-OF-SINATRA-GEM-YOU-HAVE-INSTALLELD/lib/sinatra.rb'
 
 
 FastCGI                                        {#deployment_fastcgi}
 -------
-The standard method for deployment is to use Thin or Mongrel, and have a 
-reverse proxy (lighttpd, nginx, or even Apache) point to your bundle of servers.
+標準的なデプロイの方法は、Thinか Mongrelを使い、
+リバースプロキシ(lighttpd, nginx, またはApache)があなたのサーバを向くようにすることです。
 
-But that isn't always possible. Cheaper shared hosting (like Dreamhost) won't
-let you run Thin or Mongrel, or setup reverse proxies (at least on the default
-shared plan).
+しかし、それはいつもできるとは限りません。（Dreamhostのような）
+安い共有ホスティングの場合は、ThinやMongrelを立ち上げることができなかったり、
+（少なくともデフォルトの共有プランでは）リバースプロキシの設定ができません。
 
-Luckily, Rack supports various connectors, including CGI and FastCGI. Unluckily
-for us, FastCGI doesn't quite work with the current Sinatra release without some tweaking.
+幸いにも、RackはCGIやFastCGIなどのいくつかのコネクタをサポートしています。
+しかし不幸にも現在のSinatraのリリースではいくつかの調整をしないと、FastCGIではうまく動作しません。
 
-### Deployment with Sinatra version 0.9
-From version 9.0 Sinatra requires Rack 0.9.1, however FastCGI wrapper from this version seems not working well with Sinatra unless you define your application as a subclass of Sinatra::Application class and run this application directly as a Rack application.
+### Sinatraのバージョン0.9をデプロイする
+Sinatraのバージョン9.0からは Rack0.9.1が必要です。
+しかしこのバージョンのFastCGIラッパーでは、あなたのアプリケーションを
+ Sinatra::Applicationクラスのサブクラスとして定義し、
+Rackアプリケーションとして直接起動しなければうまく動作しません。
 
-Steps to deploy via FastCGI:
+FastCGIにデプロイする手順：
 * htaccess
-* subclass your application as Sinatra::Application
+* アプリケーションをSinatra::Applicationのサブクラスにする
 * dispatch.fcgi
 
 1. .htaccess
@@ -209,7 +220,7 @@ Steps to deploy via FastCGI:
         
         RewriteRule ^(.*)$ dispatch.fcgi [QSA,L]
 
-2. Subclass your application as Sinatra::Application
+2. アプリケーションを Sinatra::Applicationのサブクラスにする。
 
         # my_sinatra_app.rb
         class MySinatraApp < Sinatra::Application
@@ -217,7 +228,7 @@ Steps to deploy via FastCGI:
         end
 
 
-3. dispatch.fcgi - Run this application directly as a Rack application
+3. dispatch.fcgi - アプリケーションを直接Rackアプリケーションとして起動する。
 
         #!/usr/local/bin/ruby
     
@@ -251,16 +262,16 @@ Steps to deploy via FastCGI:
         Rack::Handler::FastCGI.run(builder)
 
 
-### Deployment with Sinatra version <= 0.3
-In version 0.3 to get a simple 'hello world' Sinatra application up and running via FastCGI, you have to pulling down the current Sinatra code, and hacking at it a bit. Don't
-worry though, it only requires commenting out a few lines, and tweaking
-another.
+### Sinatraのバージョン0.3以前をデプロイする
+バージョン0.3で、単純な'hello world'のSinatraアプリケーションをFastCGIで実行するには、
+現在のSinatraコードを取り出し、少しハックする必要があります。
+でも心配しないでください、いくつかの行をコメントアウトし、調整するだけです。
 
-Steps to deploy:
+デプロイの手順：
 
 * .htaccess
 * dispatch.fcgi
-* Tweaked sinatra.rb
+* sinatra.rbを調整する
 
 
 1. .htaccess
@@ -299,7 +310,7 @@ Steps to deploy:
       
        load 'app.rb'
 
-3. sinatra.rb - Replace this function with the new version here (commenting out the `puts` lines)
+3. sinatra.rb - 新しいバージョンでこの関数を置き換える（`puts`の行をコメントアウトする ）
 
        def run
          begin

@@ -1,11 +1,12 @@
-Error Handling
+エラーハンドリング
 ==============
 
 not\_found
 ---------
-Remember: These are run inside the Sinatra::EventContext which means you get all the goodies is has to offer (i.e. haml, erb, :halt, etc.)
+注意：これらはSinatra::EventContext内で動作しています。
+つまりこれらのすべてのものは提供される必要があります（例えばhaml、erb、:haltなど）
 
-Whenever NotFound is raised this will be called
+NotFoundが送出されるたび必ずこれが呼び出されます。
 
     not_found do
       'This is nowhere to be found'
@@ -13,33 +14,35 @@ Whenever NotFound is raised this will be called
 
 error
 -----
-By default error will catch Sinatra::ServerError
+デフォルトでは、errorはSinatra::ServerErrorをキャッチします。
 
-Sinatra will pass you the error via the ‘sinatra.error’ in request.env
+Sinatraはrequest.envの'sinatra.error'を介してエラーを渡します。
 
     error do
       'Sorry there was a nasty error - ' + request.env['sinatra.error'].name
     end
   
-Custom error mapping:
+カスタムエラーのマッピング：
 
     error MyCustomError do
       'So what happened was...' + request.env['sinatra.error'].message
     end
 
-then if this happens:
+このとき、もしこれが起きると：
 
     get '/' do
       raise MyCustomError, 'something bad'
     end
 
-you gets this:
+これを取得します：
 
     So what happened was... something bad
 
-Additional Information
+追加情報
 ----------------------
-Because Sinatra gives you a default not\_found and error do :production that are secure. If you want to customize only for :production but want to keep the friendly helper screens for :development then do this:
+Sinatraはデフォルトのnot\_foundとerrorを提供するため、:productionでは安全に実行されます。
+もし:productionをカスタマイズし:developmentのフレンドリーな
+ヘルパー画面を表示したい場合は次のようにします：
 
     configure :production do
       not_found do

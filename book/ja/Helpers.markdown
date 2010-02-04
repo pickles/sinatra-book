@@ -1,15 +1,17 @@
-Helpers
+ヘルパー
 =======
 
-The basics
+基本
 ----------
 
-It is ill-advised to create helpers on the root level of your application.  They muddy the global namespace, and don't
-have easy access to the request, response, session or cookie variables.
+アプリケーションのルートレベルにヘルパーを作るのは良くありません。
+グローバルネームスペースを汚し、request、response、session、
+cookie変数に簡単にアクセスすることができません。
 
-Instead, use the handy helpers method to install methods on `Sinatra::EventContext` for use inside events and templates.
+その代わり、手軽なhelpersメソッドを使用して`Sinatra::EventContext`に
+インストールすることでイベントやテンプレートで使用する事ができます。
 
-Example:
+例：
 
     helpers do
       def bar(name)
@@ -21,13 +23,14 @@ Example:
       bar(params[:name])
     end
 
-Implemention of rails style partials
+Railsスタイルのパーシャルの実装
 ------------------------------------
 
-Using partials in your views is a great way to keep them clean.  Since Sinatra takes the hands off approach to framework
-design, you'll have to implement a partial handler yourself.  
+ビューでパーシャルを使うことは、ビューをきれいに保つ良い方法です。
+Sinatraはフレームワークの設計に手をかけない方針を採用しているため、
+パーシャルのハンドラを自分で実装しなければなりません。
 
-Here is a really basic version:
+本当に基本的なバージョンはこのようになります：
 
     # Usage: partial :foo
     helpers do
@@ -36,12 +39,13 @@ Here is a really basic version:
       end
     end
 
-A more advanced version that would handle passing local options, and looping over a hash would look like:
+ローカルオプションを渡したり、ハッシュをループしたりする
+より高度なバージョンは次のようになります：
 
     # Render the page once:
     # Usage: partial :foo
     # 
-    # foo will be rendered once for each element in the array, passing in a local variable named "foo"
+    # "foo"という名前のローカル変数で渡されたfooは配列の要素ごとにレンダリングされます。
     # Usage: partial :foo, :collection => @my_foos    
 
     helpers do
